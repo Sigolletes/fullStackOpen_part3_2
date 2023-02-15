@@ -31,6 +31,10 @@ morgan(function (tokens, req, res) {
   ].join(' ')
 })
 
+// MIDDLEWARE STATIC FROM EXPRESS FOR SHOW INDEX.HTML FROM BUILD FOLDER IF THE GET REQUEST ADDRESS CORRESPOND TO www.example.com/index.html OR www.example.com
+app.use(express.static('build'))
+
+
 // PEOPLE ARRAY
 let people = [
   { 
@@ -124,7 +128,7 @@ app.delete('/api/people/:id', (request, response) => {
 })
 
 // THE WEB SERVER CREATED WITH EXPRESS (APP) IS ASSIGNED TO A PORT AND RESPOND TO THE REQUESTS OF THAT PORT
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
