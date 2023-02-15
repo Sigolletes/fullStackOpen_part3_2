@@ -2,8 +2,30 @@
 const express = require('express')
 const app = express()
 
-// EXPRESS JSON-PARSER FOR ACCESS DATA EASILY
+// EXPRESS JSON-PARSER FOR ACCESS DATA EASILY (creates body property)
 app.use(express.json())
+
+// MIDDLEWARE MORGAN FOR LOGGING MESSAGES TO THE CONSOLE
+const morgan = require('morgan')
+
+morgan.token("info", (req, res) => {
+  const { body } = req
+  return JSON.stringify(body)
+})
+
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :info")
+)
+
+morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms'
+  ].join(' ')
+})
 
 // PEOPLE ARRAY
 let people = [
