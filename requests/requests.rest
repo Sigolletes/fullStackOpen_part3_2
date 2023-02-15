@@ -17,3 +17,28 @@ Content-Type: application/json
 
 ###
 DELETE http://localhost:3001/api/people/1
+
+
+
+// RENDER TESTS
+
+###
+GET https://part3-2.onrender.com/
+
+###
+GET https://part3-2.onrender.com/api/people
+
+###
+GET https://part3-2.onrender.com/api/people/1
+
+###
+POST https://part3-2.onrender.com/api/people
+Content-Type: application/json
+
+{
+  "name": "Laura",
+  "number": "555-4444"
+}
+
+###
+DELETE https://part3-2.onrender.com/api/people/1
