@@ -2,6 +2,10 @@
 const express = require('express')
 const app = express()
 
+// MIDDLEWARE CORS (Cross-Origin Resource Sharing) FOR ALLOW CROSS-ORIGIN REQUESTS
+const cors = require('cors')
+app.use(cors())
+
 // EXPRESS JSON-PARSER FOR ACCESS DATA EASILY (creates body property)
 app.use(express.json())
 
