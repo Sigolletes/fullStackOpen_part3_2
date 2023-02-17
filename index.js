@@ -127,6 +127,12 @@ app.delete('/api/people/:id', (request, response) => {
   response.status(204).end()
 })
 
+// MIDDLEWARE FOR CATCHING REQUESTS MADE TO NON-EXISTENT ROUTES (it has to be after routes)
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'Unknown Endpoint' })
+}
+app.use(unknownEndpoint)
+
 // THE WEB SERVER CREATED WITH EXPRESS (APP) IS ASSIGNED TO A PORT AND RESPOND TO THE REQUESTS OF THAT PORT
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
