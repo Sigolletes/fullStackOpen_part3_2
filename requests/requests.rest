@@ -4,15 +4,15 @@ GET http://localhost:3001/
 GET http://localhost:3001/api/people
 
 ###
-GET http://localhost:3001/api/people/1
+GET http://localhost:3001/api/people/63ef5c55b6aad3901dc79689
 
 ###
 POST http://localhost:3001/api/people
 Content-Type: application/json
 
 {
-  "name": "Laura",
-  "number": "555-4444"
+  "name": "Rest API test",
+  "number": "1111"
 }
 
 ###
@@ -29,15 +29,15 @@ GET https://part3-2.onrender.com/
 GET https://part3-2.onrender.com/api/people
 
 ###
-GET https://part3-2.onrender.com/api/people/1
+GET https://part3-2.onrender.com/api/people/63ef5c55b6aad3901dc79689
 
 ###
 POST https://part3-2.onrender.com/api/people
 Content-Type: application/json
 
 {
-  "name": "Laura",
-  "number": "555-4444"
+  "name": "Rest API test for Render",
+  "number": "678900"
 }
 
 ###
