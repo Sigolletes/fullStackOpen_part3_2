@@ -1,4 +1,4 @@
-// PRACTICE APPLICATION - node mongo.js password
+/* // PRACTICE APPLICATION - node mongo.js password
 
 // LIBRARY MONGOOSE (high-level API) IS AN ODM (Object Document Mapper) for saving JS objects as Mongo documents
 const mongoose = require('mongoose')
@@ -108,3 +108,4 @@ if (process.argv.length > 4) {
 // })
 
 // ##########################################################
+ */

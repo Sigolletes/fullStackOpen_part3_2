@@ -1,3 +1,9 @@
+// DOTENV
+require('dotenv').config()
+
+// IMPORT MODULE person.js
+const Person = require('./models/person')
+
 // EXPRESS FRAMEWORK FOR NODE.JS
 const express = require('express')
 const app = express()
@@ -71,26 +77,24 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/people', (request, response) => {
-  response.json(people)
+  Person.find({}).then(people => {
+    response.json(people)
+  })
 })
 
 app.get('/api/people/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const person = people.find(person => person.id === id)
-  if (person) {
+  Person.findById(request.params.id).then(person => {
     response.json(person)
-  } else {
-    response.status(404).end()
-  }
+  })
 })
 
-const generateId = () => {
-  let num
-  do {
-    num = Math.floor(Math.random() * 10000)
-  } while (people.some(p => p.id === num))
-  return num
-}
+// const generateId = () => {
+//   let num
+//   do {
+//     num = Math.floor(Math.random() * 10000)
+//   } while (people.some(p => p.id === num))
+//   return num
+// }
 
 app.post('/api/people', (request, response) => {
   const body = request.body
@@ -111,21 +115,21 @@ app.post('/api/people', (request, response) => {
     })
   }
 
-  const person = {
-    id: generateId(),
+  const person = new Person({
     name: body.name,
     number: body.number,
-  }
+  })
 
-  people = people.concat(person)
-  response.json(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
-app.delete('/api/people/:id', (request, response) => {
-  const id = Number(request.params.id)
-  people = people.filter(person => person.id !== id)
-  response.status(204).end()
-})
+// app.delete('/api/people/:id', (request, response) => {
+//   const id = Number(request.params.id)
+//   people = people.filter(person => person.id !== id)
+//   response.status(204).end()
+// })
 
 // MIDDLEWARE FOR CATCHING REQUESTS MADE TO NON-EXISTENT ROUTES (it has to be after routes)
 const unknownEndpoint = (request, response) => {
@@ -134,7 +138,7 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint)
 
 // THE WEB SERVER CREATED WITH EXPRESS (APP) IS ASSIGNED TO A PORT AND RESPOND TO THE REQUESTS OF THAT PORT
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
