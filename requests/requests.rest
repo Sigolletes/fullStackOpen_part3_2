@@ -1,4 +1,4 @@
-GET http://localhost:3001/
+GET http://localhost:3001
 
 ###
 GET http://localhost:3001/info
@@ -26,7 +26,7 @@ DELETE http://localhost:3001/api/people/1
 // RENDER TESTS
 
 ###
-GET https://part3-2.onrender.com/
+GET https://part3-2.onrender.com
 
 ###
 GET https://part3-2.onrender.com/info
@@ -42,9 +42,9 @@ POST https://part3-2.onrender.com/api/people
 Content-Type: application/json
 
 {
-  "name": "Rest API test for Render",
-  "number": "678900"
+  "name": "Rest API test for Render 2",
+  "number": "6789002"
 }
 
 ###
-DELETE https://part3-2.onrender.com/api/people/1
+DELETE https://part3-2.onrender.com/api/people/63ef62da70c5c23e42342a62
