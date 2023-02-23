@@ -12,6 +12,9 @@ const app = express()
 const cors = require('cors')
 app.use(cors())
 
+// MIDDLEWARE STATIC FROM EXPRESS FOR SHOW INDEX.HTML FROM BUILD FOLDER IF THE GET REQUEST ADDRESS CORRESPOND TO www.example.com/index.html OR www.example.com
+app.use(express.static('build'))
+
 // EXPRESS JSON-PARSER FOR ACCESS DATA EASILY (creates body property)
 app.use(express.json())
 
@@ -36,10 +39,6 @@ morgan(function (tokens, req, res) {
     tokens['response-time'](req, res), 'ms'
   ].join(' ')
 })
-
-// MIDDLEWARE STATIC FROM EXPRESS FOR SHOW INDEX.HTML FROM BUILD FOLDER IF THE GET REQUEST ADDRESS CORRESPOND TO www.example.com/index.html OR www.example.com
-app.use(express.static('build'))
-
 
 // PEOPLE ARRAY
 let people = [
@@ -73,19 +72,33 @@ app.get('/', (request, response) => {
 
 app.get('/info', (request, response) => {
   let date = new Date
-  response.send(`<h3>This Phonebook has information for ${people.length} people</h3><h3>${date}</h3>`)
+
+  Person.count({}, function(error, result, next) {
+    if (error) {
+      next(error)
+    } else {
+      response.send(`<h3>This Phonebook has information for ${result} people</h3><h3>${date}</h3>`)
+    }
+  })
 })
 
-app.get('/api/people', (request, response) => {
+app.get('/api/people', (request, response, next) => {
   Person.find({}).then(people => {
     response.json(people)
   })
+  .catch(error => next(error))
 })
 
-app.get('/api/people/:id', (request, response) => {
-  Person.findById(request.params.id).then(person => {
-    response.json(person)
+app.get('/api/people/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+  .then(person => {
+    if (person) {
+      response.json(person)
+    } else {
+      response.status(404).end()
+    }
   })
+  .catch(error => next(error))
 })
 
 // const generateId = () => {
@@ -96,7 +109,7 @@ app.get('/api/people/:id', (request, response) => {
 //   return num
 // }
 
-app.post('/api/people', (request, response) => {
+app.post('/api/people', (request, response, next) => {
   const body = request.body
 
   if (!body.name) {
@@ -109,11 +122,11 @@ app.post('/api/people', (request, response) => {
       error: 'Number missing' 
     })
   }
-  if (people.some(p => p.name === body.name)) {
-    return response.status(400).json({ 
-      error: 'This name already exists in the phonebook' 
-    })
-  }
+  // if (people.some(p => p.name === body.name)) {
+  //   return response.status(400).json({ 
+  //     error: 'This name already exists in the phonebook' 
+  //   })
+  // }
 
   const person = new Person({
     name: body.name,
@@ -123,19 +136,49 @@ app.post('/api/people', (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
+  .catch(error => next(error))
 })
 
-// app.delete('/api/people/:id', (request, response) => {
-//   const id = Number(request.params.id)
-//   people = people.filter(person => person.id !== id)
-//   response.status(204).end()
-// })
+app.put('/api/people/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
+
+app.delete('/api/people/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
 
 // MIDDLEWARE FOR CATCHING REQUESTS MADE TO NON-EXISTENT ROUTES (it has to be after routes)
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'Unknown Endpoint' })
 }
 app.use(unknownEndpoint)
+
+// ERROR HANDLER MIDDLEWARE
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+  next(error)
+}
+
+// this has to be the last loaded middleware.
+app.use(errorHandler)
 
 // THE WEB SERVER CREATED WITH EXPRESS (APP) IS ASSIGNED TO A PORT AND RESPOND TO THE REQUESTS OF THAT PORT
 const PORT = process.env.PORT
