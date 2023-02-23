@@ -44,15 +44,24 @@ GET https://part3-2.onrender.com/info
 GET https://part3-2.onrender.com/api/people
 
 ###
-GET https://part3-2.onrender.com/api/people/63ef5c55b6aad3901dc79689
+GET https://part3-2.onrender.com/api/people/63f7435f765e6050e9c6f003
 
 ###
 POST https://part3-2.onrender.com/api/people
 Content-Type: application/json
 
 {
-  "name": "Rest API test for Render 2",
-  "number": "6789002"
+  "name": "Rest API test for Render 3",
+  "number": "672"
+}
+
+### 
+PUT https://part3-2.onrender.com/api/people
+Content-Type: application/json
+
+{
+  "name": "Sara",
+  "number": "888-258"
 }
 
 ###
