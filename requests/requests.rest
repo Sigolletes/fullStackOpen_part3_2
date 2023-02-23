@@ -18,6 +18,15 @@ Content-Type: application/json
   "number": "11112"
 }
 
+### 
+PUT http://localhost:3001/api/people/63ef5e2e79883c41ac8dcff7
+Content-Type: application/json
+
+{
+  "name": "Sa",
+  "number": "888-258569"
+}
+
 ###
 DELETE http://localhost:3001/api/people/1
 
